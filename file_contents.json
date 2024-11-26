@@ -1,0 +1,14 @@
+{
+  "face_motion_tracker/src/main.py": "<Content with placeholders>",
+  "face_motion_tracker/src/face_tracker.py": "<Content with placeholders>",
+  "face_motion_tracker/src/motion_detector.py": "<Content with placeholders>",
+  "face_motion_tracker/src/utils.py": "<Content with placeholders>",
+  "setup.py": "<Content with placeholders>",
+  "requirements.txt": "opencv-python",
+  "README.md": "<Content with placeholders>",
+  ".gitignore": "__pycache__/\n.env\nvenv/",
+  "readme.txt": "<Instructions on how to run the code>",
+  "face_motion_tracker/tests/test_face_tracker.py": "<Content with placeholders>",
+  "face_motion_tracker/tests/test_motion_detector.py": "<Content with placeholders>",
+  "face_motion_tracker/tests/test_main.py": "<Content with placeholders>"
+}
