@@ -1,5 +1,6 @@
 #generate_project.py
 
+
 import os
 import json
 
@@ -7,6 +8,27 @@ def load_json(file_path):
     """Load a JSON file."""
     with open(file_path, 'r') as f:
         return json.load(f)
+
+def load_config(config_path):
+    """Load and validate the config file."""
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+    # Validate required fields
+    required_fields = ["project_name", "author", "email"]
+    for field in required_fields:
+        if field not in config or not config[field].strip():
+            raise ValueError(f"Missing or empty required field: {field}")
+    
+    # Add defaults if optional fields are missing
+    config.setdefault("version", "0.1.0")
+    config.setdefault("license", "MIT")
+    config.setdefault("github_repo", f"https://github.com/{config['author']}/{config['project_name']}")
+    config.setdefault("optional_modules", {"logging": False, "cli": False})
+    config.setdefault("custom_directories", [])
+    config.setdefault("custom_files", {})
+    
+    return config
 
 def replace_placeholders(content, placeholders):
     """Replace placeholders in content with actual values."""
@@ -20,13 +42,13 @@ def create_file(file_path, content):
     with open(file_path, 'w') as f:
         f.write(content)
 
-def create_project(project_structure, file_contents, placeholders):
+def create_project(project_structure, file_contents, config):
     """Create project files and directories based on the structure and contents."""
     for directory, files in project_structure.items():
         for file_name in files:
-            file_path = os.path.join(directory.replace("{{ project_name }}", placeholders["project_name"]), file_name)
+            file_path = os.path.join(directory.replace("{{ project_name }}", config["project_name"]), file_name)
             content = file_contents.get(file_name, "")
-            content = replace_placeholders(content, placeholders)
+            content = replace_placeholders(content, config)
             create_file(file_path, content)
 
 def extend_project_structure(structure, additional_dirs, additional_files):
@@ -70,60 +92,34 @@ if __name__ == "__main__":
     return file_contents
 
 def main():
-    print("Welcome to the Enhanced Dynamic Project Generator!")
+    print("Welcome to the Configurable Dynamic Project Generator!")
+
+    # Load and validate config.json
+    config_path = '/mnt/data/config.json'
+    try:
+        config = load_config(config_path)
+    except (FileNotFoundError, ValueError) as e:
+        print(f"Error loading config.json: {e}")
+        return
+
+    # Load project structure and file contents templates
+    project_structure = load_json('/mnt/data/project_structure.json')["structure"]
+    file_contents = load_json('/mnt/data/file_contents.json')
     
-    # Prompt user for project details
-    project_name = input("Enter your project name: ").strip()
-    author_name = input("Enter your name (author): ").strip()
-    author_email = input("Enter your email: ").strip()
-    
-    # Load structure and content templates
-    project_structure = load_json('/mnt/data/updated_project_structure.json')["structure"]
-    file_contents = load_json('/mnt/data/updated_file_contents.json')
-    
-    # Prompt user for optional features
-    print("\nOptional Features:")
-    add_logging = input("Include logging support? (yes/no): ").strip().lower() == "yes"
-    add_cli = input("Include CLI setup? (yes/no): ").strip().lower() == "yes"
-    optional_features = {
-        "logging": add_logging,
-        "cli": add_cli
-    }
-    
-    # Prompt user for additional directories and files
-    print("\nWould you like to add custom directories or files?")
-    additional_dirs = []
-    additional_files = {}
-    if input("Add custom directories? (yes/no): ").strip().lower() == "yes":
-        while True:
-            dir_name = input("Enter directory name (or press Enter to stop): ").strip()
-            if not dir_name:
-                break
-            additional_dirs.append(dir_name)
-    
-    if input("Add custom files? (yes/no): ").strip().lower() == "yes":
-        while True:
-            file_path = input("Enter file path (or press Enter to stop): ").strip()
-            if not file_path:
-                break
-            content = input(f"Enter content for {file_path} (leave blank for empty file): ")
-            additional_files[file_path] = content
-    
-    # Prepare placeholders
-    placeholders = {
-        "project_name": project_name,
-        "author_name": author_name,
-        "author_email": author_email
-    }
-    
-    # Extend structure and add optional modules
-    project_structure = extend_project_structure(project_structure, additional_dirs, additional_files)
-    file_contents = add_optional_modules(file_contents, placeholders, optional_features)
+    # Extend structure with custom directories and files from config
+    project_structure = extend_project_structure(
+        project_structure, 
+        config.get("custom_directories", []), 
+        config.get("custom_files", {})
+    )
+
+    # Add optional modules based on config
+    file_contents = add_optional_modules(file_contents, config, config["optional_modules"])
     
     # Create project files and structure
-    create_project(project_structure, file_contents, placeholders)
+    create_project(project_structure, file_contents, config)
     
-    print(f"\nProject '{project_name}' has been created successfully!")
+    print(f"\nProject '{config['project_name']}' has been created successfully!")
     print("Customize your new project as needed. Happy coding!")
 
 if __name__ == "__main__":

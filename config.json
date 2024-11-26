@@ -1,0 +1,14 @@
+{
+    "project_name": "{{ project_name }}",
+    "author": "{{ author_name }}",
+    "email": "{{ author_email }}",
+    "optional_modules": {
+        "logging": true,
+        "cli": true
+    },
+    "custom_directories": ["docs", "data"],
+    "custom_files": {
+        "docs/README.md": "Documentation starts here.",
+        "data/sample_data.csv": ""
+    }
+}
