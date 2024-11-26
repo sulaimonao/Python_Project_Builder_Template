@@ -1,14 +1,10 @@
 {
-  "face_motion_tracker/src/main.py": "<Content with placeholders>",
-  "face_motion_tracker/src/face_tracker.py": "<Content with placeholders>",
-  "face_motion_tracker/src/motion_detector.py": "<Content with placeholders>",
-  "face_motion_tracker/src/utils.py": "<Content with placeholders>",
-  "setup.py": "<Content with placeholders>",
-  "requirements.txt": "opencv-python",
-  "README.md": "<Content with placeholders>",
-  ".gitignore": "__pycache__/\n.env\nvenv/",
-  "readme.txt": "<Instructions on how to run the code>",
-  "face_motion_tracker/tests/test_face_tracker.py": "<Content with placeholders>",
-  "face_motion_tracker/tests/test_motion_detector.py": "<Content with placeholders>",
-  "face_motion_tracker/tests/test_main.py": "<Content with placeholders>"
+  "{{ project_name }}/src/main.py": "\"\"\"\nMain entry point for {{ project_name }}.\n\nThis script demonstrates the primary functionality of the project.\n\"\"\"\n\ndef main():\n    print(\"Welcome to {{ project_name }}!\")\n\nif __name__ == \"__main__\":\n    main()\n",
+  "{{ project_name }}/src/module1.py": "\"\"\"\nModule 1: Example functionality for {{ project_name }}.\n\nCustomize this module with your specific logic.\n\"\"\"\n\ndef example_function():\n    print(\"Example function in Module 1.\")\n",
+  "{{ project_name }}/src/utils.py": "\"\"\"\nUtility functions for {{ project_name }}.\n\nProvide reusable helper functions here.\n\"\"\"\n\ndef helper_function():\n    print(\"Utility function.\")\n",
+  "setup.py": "from setuptools import setup, find_packages\n\nsetup(\n    name=\"{{ project_name }}\",\n    version=\"0.1.0\",\n    packages=find_packages(),\n    install_requires=[],  # Add your dependencies here.\n    entry_points={\n        \"console_scripts\": [\n            \"{{ project_name }} = {{ project_name }}.src.main:main\",\n        ],\n    },\n)\n",
+  "requirements.txt": "# Add your project dependencies here.\n",
+  "README.md": "# {{ project_name }}\n\n## Overview\nA template project structure for Python applications.\n\n## Getting Started\n\n1. Clone the repository or copy the template files.\n2. Replace placeholders (e.g., `{{ project_name }}`) with your project details.\n3. Run the `generate_project.py` script to initialize your project.\n\n## Usage\n- Customize the modules in the `src/` folder with your application logic.\n- Run `python src/main.py` to test the main functionality.\n",
+  ".gitignore": "__pycache__/\n.env\nvenv/\n",
+  "config.json": "{\n    \"project_name\": \"{{ project_name }}\",\n    \"author\": \"{{ author_name }}\",\n    \"email\": \"{{ author_email }}\"\n}"
 }
